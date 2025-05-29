@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
 
 export default function AddNoteModal({ onClose, onNoteCreated }) {
     const [form, setForm] = useState({ title: '', content: '', categories: []});
@@ -72,12 +72,17 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
                 />
 
                 <label style={{ marginBottom: '5px', display: 'block' }}>Categories (optional)</label>
-                <Select
+                <CreatableSelect
                     isMulti
                     options={categoryOptions}
                     value={form.categories}
                     onChange={handleCategoryChange}
-                    placeholder='Select categories'
+                    placeholder='Select or create categories'
+                    onCreateOption={(inputValue) => {
+                        const newOption = {label: inputValue, value:inputValue};
+                        const updated = [...form.categories, newOption];
+                        setForm({...form, categories: updated});
+                    }}
                     styles={{ container: base => ({ ...base, marginBottom: '10px' }) }}
                 />
 
