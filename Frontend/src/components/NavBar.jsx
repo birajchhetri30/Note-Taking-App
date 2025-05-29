@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../services/auth';
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { IoIosClose } from "react-icons/io";
+
 import Select from 'react-select';
 import api from '../services/api';
 
-export default function NavBar({ onSearch, onFilterChange, onSortChange, sortBy, sortOrder }) {
-    const [searchTerm, setSearchTerm] = useState('');
+export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder }) {
+    const [searchTerm, setSearchTerm] = useState(search);
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -18,10 +21,12 @@ export default function NavBar({ onSearch, onFilterChange, onSortChange, sortBy,
     };
 
     const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-        if (onSearch) onSearch(value);
+        setSearchTerm(e.target.value);
     };
+
+    const handleSearchSubmit = () => {
+        if (onSearch) onSearch(searchTerm);
+    }
 
     const handleFilterSelect = (categoryId) => {
         setFilterDropdownOpen(false);
@@ -47,8 +52,30 @@ export default function NavBar({ onSearch, onFilterChange, onSortChange, sortBy,
                     placeholder='Search notes'
                     value={searchTerm}
                     onChange={handleSearchChange}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
                     style={styles.searchInput}
+                    
                 />
+
+                {searchTerm !== '' && (
+                    <IoIosClose 
+                    onClick={() => {
+                        setSearchTerm('');
+                        if (onSearch) onSearch('');
+                    }}
+                    style={{cursor: 'pointer', marginLeft: '8px', color: 'white'}}
+                    />
+                )}
+
+                <FaMagnifyingGlass
+                    onClick={handleSearchSubmit}
+                    style={{ cursor: 'pointer', marginLeft: '8px', color: 'white' }}
+                />
+
+
+            </div>
+
+            <div style={styles.center}>
 
                 <div style={{ position: 'relative', marginLeft: 10 }}>
                     <button onClick={() => setFilterDropdownOpen(!filterDropdownOpen)} style={styles.btn}>

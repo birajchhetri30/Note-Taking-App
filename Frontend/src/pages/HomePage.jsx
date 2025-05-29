@@ -71,9 +71,9 @@ export default function HomePage() {
 
     const handleSortChange = (sortField) => {
         const newSortOrder = sortBy === sortField
-        ? (sortOrder === 'ASC' ? 'DESC' : 'ASC')
-        : 'DESC';
-        
+            ? (sortOrder === 'ASC' ? 'DESC' : 'ASC')
+            : 'DESC';
+
         setSortBy(sortField);
         setSortOrder(newSortOrder);
     }
@@ -84,6 +84,7 @@ export default function HomePage() {
     return (
         <div>
             <NavBar
+                search={search}
                 onSearch={handleSearch}
                 onFilterChange={handleFilterChange}
                 onSortChange={handleSortChange}
