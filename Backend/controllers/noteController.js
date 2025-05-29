@@ -15,9 +15,10 @@ const {
 
 const create = async (req, res) => {
     const userId = req.user.id;
-    const { title, content, categoryNames = [] } = req.body;
+    const { title, content, categoryIds = [] } = req.body;
     if (!title) return res.status(400).json({ message: 'Title is required' });
-
+    
+    console.log(categoryIds);
     const connection = await require('../db').getConnection();
     await connection.beginTransaction();
 
@@ -25,17 +26,18 @@ const create = async (req, res) => {
         const noteId = await createNote(connection, userId, title, content);
 
         // For each category
-        for (const name of categoryNames) {
-            let category = await findCategoryByName(name, userId);
+        for (const name of categoryIds) {
+            let category = await findCategoryByName(connection, name, userId);
             let categoryId;
 
             if (category) {
                 categoryId = category.id;
             } else {
-                categoryId = await createCategory(name, userId);
+                categoryId = await createCategory(connection, name, userId);
             }
+            console.log(noteId, categoryId);
 
-            await linkNoteCategory(noteId, categoryId);
+            await linkNoteCategory(connection, noteId, categoryId);
         }
 
         await connection.commit();

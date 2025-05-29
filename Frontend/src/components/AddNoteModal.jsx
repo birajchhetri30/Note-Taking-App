@@ -1,22 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
+import Select from "react-select";
 
 export default function AddNoteModal({ onClose, onNoteCreated }) {
-    const [form, setForm] = useState({ title: '', content: '' });
+    const [form, setForm] = useState({ title: '', content: '', categories: []});
     const [error, setError] = useState('');
+    const [categoryOptions, setCategoryOptions] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await api.get('/categories');
+                const options = res.data.map(cat => ({ value: cat.id, label: cat.name }));
+                setCategoryOptions(options);
+            } catch (err) {
+                setError('Failed to load categories');
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleCategoryChange = (selectedOptions) => {
+        setForm({ ...form, categories: selectedOptions || [] });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
         try {
-            const res = await api.post('/notes', form);
+            const payload = {
+                title: form.title,
+                content: form.content,
+                categoryIds: form.categories.map(cat => cat.label),
+            };
+
+            const res = await api.post('/notes', payload);
             onNoteCreated(res.data);
             onClose();
-            setForm({ title: '', content: '' });
+            setForm({ title: '', content: '', categories: [] });
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to create note');
         }
@@ -43,6 +69,16 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
                     onChange={handleChange}
                     rows={4}
                     style={{ width: '100%', marginBottom: '10px' }}
+                />
+
+                <label style={{ marginBottom: '5px', display: 'block' }}>Categories (optional)</label>
+                <Select
+                    isMulti
+                    options={categoryOptions}
+                    value={form.categories}
+                    onChange={handleCategoryChange}
+                    placeholder='Select categories'
+                    styles={{ container: base => ({ ...base, marginBottom: '10px' }) }}
                 />
 
                 <button type='submit'>Create</button>

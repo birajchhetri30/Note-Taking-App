@@ -42,27 +42,29 @@ const deleteNote = async (noteId, userId) => {
 };
 
 
-const findCategoryByName = async (name, userId) => {
-    const [rows] = await db.execute(
+const findCategoryByName = async (connection, name, userId) => {
+    const [rows] = await connection.execute(
         'SELECT id FROM categories WHERE name = ? AND (user_id = ? OR user_id IS NULL) LIMIT 1',
         [name, userId]
     );
     return rows[0];
 };
 
-const createCategory = async (name, userId) => {
-    const [result] = await db.execute(
+const createCategory = async (connection, name, userId) => {
+    const [result] = await connection.execute(
         'INSERT INTO categories (name, user_id) VALUES (?, ?)',
         [name, userId]
     );
     return result.insertId;
 };
 
-const linkNoteCategory = async (noteId, categoryId) => {
-    await db.execute(
+const linkNoteCategory = async (connection, noteId, categoryId) => {
+    console.log('inserting in notecategories')
+    await connection.execute(
         'INSERT INTO notecategories (note_id, category_id) VALUES (?, ?)',
         [noteId, categoryId]
     );
+    console.log('done')
 };
 
 const addCategoryToNote = async (noteId, categoryId) => {
@@ -107,10 +109,12 @@ const getFilteredNotes = async (userId, {
         params.push(...categoryId);
     }
 
-    sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'}`;
+    sql += ` ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'}`;
     // sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'} LIMIT ? OFFSET ?`;
     // params.push(parseInt(limit), parseInt(offset));
 
+    console.log(sql);
+    console.log(params);
     const [rows] = await db.query(sql, params);
     return rows;
 };
