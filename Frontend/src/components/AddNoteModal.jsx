@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import CreatableSelect from 'react-select/creatable';
 
-export default function AddNoteModal({ onClose, onNoteCreated }) {
-    const [form, setForm] = useState({ title: '', content: '', categories: []});
+export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdated }) {
+    const [form, setForm] = useState({ title: '', content: '', categories: [] });
     const [error, setError] = useState('');
     const [categoryOptions, setCategoryOptions] = useState([]);
 
@@ -19,6 +19,18 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
         };
         fetchCategories();
     }, []);
+
+    useEffect(() => {
+        if (note) {
+            setForm({
+                title: note.title,
+                content: note.content,
+                categories: note.categories
+                    ? note.categories.map((cat) => ({ label: cat.name, value: cat.id || cat.name }))
+                    : [],
+            });
+        }
+    }, [note]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,8 +51,15 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
                 categoryIds: form.categories.map(cat => cat.label),
             };
 
-            const res = await api.post('/notes', payload);
-            onNoteCreated(res.data);
+            if (note) {
+                // Edit mode so send PUT request
+                await api.put(`/notes/${note.id}`, payload);
+                if (onNoteUpdated) onNoteUpdated();
+            } else {
+                const res = await api.post('/notes', payload);
+                if (onNoteCreated) onNoteCreated(res.data);
+            }
+
             onClose();
             setForm({ title: '', content: '', categories: [] });
         } catch (err) {
@@ -50,7 +69,7 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
 
     return (
         <div>
-            <h3>Add New Note</h3>
+            <h3>{note ? 'Edit Note' : 'Add New Note'}</h3>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
@@ -79,14 +98,14 @@ export default function AddNoteModal({ onClose, onNoteCreated }) {
                     onChange={handleCategoryChange}
                     placeholder='Select or create categories'
                     onCreateOption={(inputValue) => {
-                        const newOption = {label: inputValue, value:inputValue};
+                        const newOption = { label: inputValue, value: inputValue };
                         const updated = [...form.categories, newOption];
-                        setForm({...form, categories: updated});
+                        setForm({ ...form, categories: updated });
                     }}
                     styles={{ container: base => ({ ...base, marginBottom: '10px' }) }}
                 />
 
-                <button type='submit'>Create</button>
+                <button type='submit'>{note ? 'Update' : 'Create'}</button>
                 <button type='button' onClick={onClose} style={{ marginLeft: '10px' }}>Cancel</button>
             </form>
 

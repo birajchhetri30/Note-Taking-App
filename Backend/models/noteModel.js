@@ -25,8 +25,8 @@ const getNoteById = async (noteId, userId) => {
     return rows[0];
 };
 
-const updateNote = async (noteId, userId, title, content) => {
-    const [result] = await db.execute(
+const updateNote = async (connection, noteId, userId, title, content) => {
+    const [result] = await connection.execute(
         'UPDATE notes SET title = ?, content = ? WHERE id = ? AND user_id = ?',
         [title, content, noteId, userId]
     );

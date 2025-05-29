@@ -99,16 +99,40 @@ const getOne = async (req, res) => {
 const update = async (req, res) => {
     const userId = req.user.id;
     const noteId = req.params.id;
-    const { title, content } = req.body;
+    const { title, content, categoryIds = [] } = req.body;
 
     if (!title) return res.status(400).json({ message: 'Title is required' });
 
+    console.log(categoryIds);
+    const connection = await require('../db').getConnection();
+    await connection.beginTransaction();
+
     try {
-        const updateRows = await updateNote(noteId, userId, title, content);
+        const updateRows = await updateNote(connection, noteId, userId, title, content);
         if (updateRows === 0) return res.status(404).json({ message: 'Note not found or no permission' });
+        
+        // For each category
+        for (const name of categoryIds) {
+            let category = await findCategoryByName(connection, name, userId);
+            let categoryId;
+
+            if (category) {
+                categoryId = category.id;
+            } else {
+                categoryId = await createCategory(connection, name, userId);
+            }
+            console.log(noteId, categoryId);
+
+            await linkNoteCategory(connection, noteId, categoryId);
+        }
+
+        await connection.commit();
+        console.log('Note updated');
         res.json({ message: 'Note updated' });
     } catch (err) {
         res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
     }
 };
 

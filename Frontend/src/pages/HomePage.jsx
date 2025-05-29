@@ -101,7 +101,7 @@ export default function HomePage() {
 
             <h2>Your Notes</h2>
 
-            <NoteList notes={notes} />
+            <NoteList notes={notes} refreshNotes={fetchNotes} />
 
             <button onClick={() => setModalIsOpen(true)}>+ New Note</button>
 
