@@ -22,13 +22,31 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
 
     useEffect(() => {
         if (note) {
-            setForm({
+            console.log('note.categories:', note);
+            setForm((prev) => ({
+                ...prev,
                 title: note.title,
                 content: note.content,
-                categories: note.categories
-                    ? note.categories.map((cat) => ({ label: cat.name, value: cat.id || cat.name }))
-                    : [],
-            });
+                categories: [],
+            }));
+
+            const fetchNoteCategories = async () => {
+                try {
+                    const res = await api.get(`/categories/notes/${note.id}/categories`);
+                    const formatted = res.data.map(cat => ({
+                        label: cat.name,
+                        value: cat.id
+                    }));
+                    setForm((prev) => ({
+                        ...prev,
+                        categories: formatted
+                    }))
+                } catch (err) {
+                    console.error('Failed to fetch note categories:', err);
+                }
+            };
+
+            fetchNoteCategories();
         }
     }, [note]);
 
