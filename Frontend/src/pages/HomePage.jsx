@@ -16,23 +16,28 @@ export default function HomePage() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const [search, setSearch] = useState('');
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState([]);
     const [sortBy, setSortBy] = useState('created_at');
     const [sortOrder, setSortOrder] = useState('DESC');
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
 
     const navigate = useNavigate();
 
     const fetchNotes = async () => {
         try {
             setLoading(true);
-            const res = await api.get('/notes', {
-                params: {
-                    search: search,
-                    sortBy: sortBy,
-                    order: sortOrder,
-                    categoryId
-                }
-            });
+            const params = {
+                search,
+                sortBy,
+                order: sortOrder,
+            };
+
+            if (categoryId.length > 0) {
+                params.categoryId = categoryId.join(',');
+            }
+
+            const res = await api.get('/notes', { params });
             setNotes(res.data);
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to fetch notes');
@@ -65,8 +70,9 @@ export default function HomePage() {
         setSearch(query);
     }
 
-    const handleFilterChange = (categories) => {
-        setCategoryId(categories);
+    const handleFilterChange = (categoryIds) => {
+        setCategoryId(categoryIds);
+        setSelectedCategories(categoryIds);
     }
 
     const handleSortChange = (sortField) => {
@@ -90,6 +96,7 @@ export default function HomePage() {
                 onSortChange={handleSortChange}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
+                selectedCategoryIds={selectedCategories}
             />
 
             <h2>Your Notes</h2>

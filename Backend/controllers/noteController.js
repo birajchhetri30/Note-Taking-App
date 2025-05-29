@@ -51,7 +51,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
     const userId = req.user.id;
-    const {
+    let {
         categoryId,
         limit = 10,
         offset = 0,
@@ -59,6 +59,12 @@ const getAll = async (req, res) => {
         order,
         search
     } = req.query;
+
+    if (typeof categoryId === 'string') {
+        categoryId = categoryId.split(',').map(id => parseInt(id)).filter(Boolean);
+    } else if (!Array.isArray(categoryId)) {
+        categoryId = [];
+    }
 
     try {
         const notes = await getFilteredNotes(userId, {

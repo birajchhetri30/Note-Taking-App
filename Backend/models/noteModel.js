@@ -80,50 +80,38 @@ const removeCategoryFromNote = async (noteId, categoryId) => {
 };
 
 const getFilteredNotes = async (userId, {
-    categoryId,
-    limit = 10,
-    offset = 0,
-    sortBy = 'created_at',
-    order = 'DESC',
-    search = ''
+    categoryId = [],
+    limit,
+    offset,
+    sortBy,
+    order,
+    search
 }) => {
-    let baseQuery = `
+    let sql = `
     SELECT DISTINCT n.*
     FROM notes n
     LEFT JOIN notecategories nc 
     ON n.id = nc.note_id
+    WHERE n.user_id = ?
     `;
-    const conditions = [`n.user_id = ?`];
+
     const params = [userId];
 
-    if (categoryId.length > 0) {
-        const categoryList = Array.isArray(categoryId) ? categoryId : [categoryId];
-        conditions.push(`nc.category_id IN (${categoryList.map(() => '?').join(',')})`);
-        params.push(...categoryList);
-    }
-
     if (search) {
-        conditions.push(`(n.title LIKE ? OR n.content like ?)`);
-        const searchTerm = `%${search}%`;
-        params.push(searchTerm, searchTerm);
+        sql += ' AND n.title LIKE ?';
+        params.push(`%${search}%`);
     }
 
-    if (conditions.length) {
-        baseQuery += `WHERE ` + conditions.join(` AND `);
+    if (categoryId.length > 0) {
+        sql += ` AND nc.category_id IN (${categoryId.map(() => '?').join(',')})`;
+        params.push(...categoryId);
     }
 
-    const allowedSortFields = ['created_at', 'updated_at', 'title'];
-    const allowedOrder = ['ASC', 'DESC'];
-
-    if (!allowedSortFields.includes(sortBy)) sortBy = 'created_at';
-    if (!allowedOrder.includes(order.toUpperCase())) order = 'DESC';
-
-    baseQuery += ` ORDER BY n.${sortBy} ${order}`; // LIMIT ? OFFSET ?`;
+    sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'}`;
+    // sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'} LIMIT ? OFFSET ?`;
     // params.push(parseInt(limit), parseInt(offset));
-    
-    console.log(baseQuery);
-    console.log(params)
-    const [rows] = await db.execute(baseQuery, params);
+
+    const [rows] = await db.query(sql, params);
     return rows;
 };
 

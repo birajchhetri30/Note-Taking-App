@@ -5,13 +5,10 @@ const {
 
 const getCategoriesForNote = async (req, res) => {
     const noteId = req.params.id;
-    const userId = req.user.id;
 
     try {
-        const note = await getCategoriesByNoteId(noteId, userId);
-        if (!note) return res.status(404).json({ message: 'Note not found' });
-
         const categories = await getCategoriesByNoteId(noteId);
+        
         res.json(categories);
     } catch (err) {
         res.status(500).json({ error: err.message });

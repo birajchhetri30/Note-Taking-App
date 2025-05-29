@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../services/auth';
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -7,13 +7,37 @@ import { IoIosClose } from "react-icons/io";
 import Select from 'react-select';
 import api from '../services/api';
 
-export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder }) {
+function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds }) {
     const [searchTerm, setSearchTerm] = useState(search);
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await api.get('/categories');
+                const options = res.data.map(cat => ({
+                    value: cat.id,
+                    label: cat.name
+                }));
+                setCategories(options);
+            } catch (err) {
+                console.error('Failed to load categories', err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        setSelectedCategories(
+            selectedCategoryIds.map(id => categories.find(cat => cat.value === id)).filter(Boolean)
+        );
+    }, [selectedCategoryIds, categories]);
 
     const handleLogout = () => {
         removeToken();
@@ -28,13 +52,12 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
         if (onSearch) onSearch(searchTerm);
     }
 
-    const handleFilterSelect = (categoryId) => {
-        setFilterDropdownOpen(false);
-        if (onFilterChange) onFilterChange(categoryId);
+    const handleFilterSelect = (categoryIds) => {
+        if (onFilterChange) onFilterChange(categoryIds);
     };
 
     const handleSortSelect = (sortBy) => {
-        setSortDropdownOpen(false);
+        // setSortDropdownOpen(false);
         if (onSortChange) onSortChange(sortBy);
     };
 
@@ -54,16 +77,16 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                     onChange={handleSearchChange}
                     onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
                     style={styles.searchInput}
-                    
+
                 />
 
                 {searchTerm !== '' && (
-                    <IoIosClose 
-                    onClick={() => {
-                        setSearchTerm('');
-                        if (onSearch) onSearch('');
-                    }}
-                    style={{cursor: 'pointer', marginLeft: '8px', color: 'white'}}
+                    <IoIosClose
+                        onClick={() => {
+                            setSearchTerm('');
+                            if (onSearch) onSearch('');
+                        }}
+                        style={{ cursor: 'pointer', marginLeft: '8px', color: 'white' }}
                     />
                 )}
 
@@ -85,7 +108,45 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                         <div style={styles.dropdown}>
                             <div style={{ padding: '10px', color: 'black' }}>
                                 <strong>Category</strong>
+                                <Select
+                                    options={categories}
+                                    isClearable
+                                    isMulti
+                                    closeMenuOnSelect={false}
+                                    value={selectedCategories}
+                                    onChange={(selectedOptions) => {
+                                        const selected = selectedOptions || [];
+                                        setSelectedCategories(selected);
 
+                                        if (selected.length === 0) {
+                                            if (onFilterChange) onFilterChange([]);
+                                        }
+                                    }}
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            marginTop: '8px',
+                                            minWidth: '180px',
+                                        }),
+                                    }}
+                                />
+                                <button
+                                    onClick={() => {
+                                        handleFilterSelect(selectedCategories.map(opt => opt.value))
+                                        setFilterDropdownOpen(false);
+                                    }}
+                                    style={{
+                                        marginTop: '10px',
+                                        backgroundColor: 'black',
+                                        color: 'white',
+                                        padding: '6px 10px',
+                                        border: '1px solid black',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Apply Filters
+                                </button>
                             </div>
                         </div>
                     )}
@@ -189,3 +250,4 @@ const styles = {
 };
 
 
+export default React.memo(NavBar);
