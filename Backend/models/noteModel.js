@@ -65,20 +65,6 @@ const linkNoteCategory = async (connection, noteId, categoryId) => {
     );
 };
 
-const addCategoryToNote = async (noteId, categoryId) => {
-    await db.execute(
-        'INSERT INTO notecategories (note_id, category_id) VALUES (?, ?)',
-        [noteId, categoryId]
-    );
-};
-
-const removeCategoryFromNote = async (noteId, categoryId) => {
-    await db.execute(
-        'DELETE FROM notecategories WHERE note_id = ? AND category_id = ?',
-        [noteId, categoryId]
-    );
-};
-
 const getFilteredNotes = async (userId, {
     categoryId = [],
     limit,
@@ -124,7 +110,5 @@ module.exports = {
     findCategoryByName,
     createCategory,
     linkNoteCategory,
-    addCategoryToNote,
-    removeCategoryFromNote,
     getFilteredNotes,
 };

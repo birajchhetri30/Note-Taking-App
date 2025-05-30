@@ -10,7 +10,5 @@ router.get('/', noteController.getAll);
 router.get('/:id', noteController.getOne);
 router.put('/:id', noteController.update);
 router.delete('/:id', noteController.remove);
-router.post('/:id/categories', noteController.addCategory);
-router.delete('/:id/categories/:categoryId', noteController.removeCategory);
 
 module.exports = router;
