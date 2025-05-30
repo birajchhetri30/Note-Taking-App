@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from '../components/PasswordInput';
+import TextInput from '../components/TextInput';
 
 export default function Register() {
     const [form, setForm] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,24 +41,33 @@ export default function Register() {
             return;
         }
 
+        if (loading) return;
+        setLoading(true);
+
         try {
             await api.post('/users/register', cleanedForm);
             navigate('/login');
         } catch (err) {
-            setError(err.response?.data?.error || 'Registration failed');
+            setError(err.response?.data?.error || 'Email already exists');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input name='name' value={form.name} onChange={handleChange} placeholder='Name' />
-                <input name='email' value={form.email} onChange={handleChange} placeholder='Email' />
-                <input name='password' value={form.password} type='password' onChange={handleChange} placeholder='Password' />
-                <button type='submit'>Register</button>
-            </form>
+        <div className='login_card'>
+            <div className='bg-primary-200 h-4/5 sm:w-1/2 md:1/2 lg:w-1/3 xl:w-1/4 p-6 rounded-3xl shadow-2xl flex flex-col items-center'>
+                <h1 className='h1 mt-5'>Register</h1>
+                <form onSubmit={handleSubmit} className='credentials_form mt-10'>
+                    <TextInput name='name' value={form.name} onChange={handleChange}/>
+                    <TextInput name='email' value={form.email} onChange={handleChange}/>
+                    <PasswordInput name="password" value={form.password} onChange={handleChange}/>
+                    <button
+                        className='button'
+                        type='submit' disabled={loading}>Register</button>
+                </form>
+                {error && <p className='error_style'>{error}</p>}
+            </div>
         </div>
     )
 }

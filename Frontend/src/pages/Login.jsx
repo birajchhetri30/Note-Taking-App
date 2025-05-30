@@ -2,11 +2,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { setToken } from '../services/auth';
+import TextInput from '../components/TextInput';
+import PasswordInput from '../components/PasswordInput';
 
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,24 +35,36 @@ export default function Login() {
             return;
         }
 
+        if (loading) return;
+        setLoading(true);
+
         try {
             const res = await api.post('/users/login', cleanedForm);
             setToken(res.data.token);
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            setError(err.response?.data?.error || 'Incorrect email/password');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input name='email' value={form.email} onChange={handleChange} placeholder='Email' />
-                <input name='password' type='password' value={form.password} onChange={handleChange} placeholder='Password' />
-                <button type='submit'>Login</button>
-            </form>
+        <div className='login_card'>
+            <div className='bg-primary-200 h-3/4 sm:w-1/2 md:1/2 lg:w-1/3 xl:w-1/4 p-6 rounded-3xl shadow-2xl flex flex-col items-center'>
+                <h1 className="h1 mt-10">Login</h1>
+                <form onSubmit={handleSubmit} className="credentials_form mt-20">
+                    <TextInput name='email' value={form.email} onChange={handleChange}/>
+                    <PasswordInput name='password' value={form.password} onChange={handleChange}/>
+                    <button
+                        className="button"
+                        type='submit' disabled={loading}
+                    >
+                        Login
+                    </button>
+                </form>
+                {error && <p className="error_style">{error}</p>}
+            </div>
         </div>
     );
 }
