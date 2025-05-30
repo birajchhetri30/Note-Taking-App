@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import {setToken} from '../services/auth';
+import { setToken } from '../services/auth';
 
 
 export default function Login() {
@@ -15,8 +15,23 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
+        const cleanedForm = {
+            email: form.email.trim(),
+            password: form.password,
+        };
+
+        if (!cleanedForm.email || !cleanedForm.password) {
+            setError('All fields are required');
+            return;
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(cleanedForm.email)) {
+            setError('Invalid email');
+            return;
+        }
+
         try {
-            const res = await api.post('/users/login', form);
+            const res = await api.post('/users/login', cleanedForm);
             setToken(res.data.token);
             navigate('/');
         } catch (err) {
@@ -27,10 +42,10 @@ export default function Login() {
     return (
         <div>
             <h2>Login</h2>
-            {error && <p style={{color: 'red'}}>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                <input name='email' value={form.email} onChange={handleChange} placeholder='Email' required/>
-                <input name='password' type='password' value={form.password} onChange={handleChange} placeholder='password' required />
+                <input name='email' value={form.email} onChange={handleChange} placeholder='Email' />
+                <input name='password' type='password' value={form.password} onChange={handleChange} placeholder='Password' />
                 <button type='submit'>Login</button>
             </form>
         </div>

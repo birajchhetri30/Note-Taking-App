@@ -4,6 +4,22 @@ const {createUser, findUserByEmail} = require('../models/userModel');
 
 const register = async (req, res) => {
     const {name, email, password} = req.body;
+
+    if (!name || name.trim() === '') {
+        return res.status(400).json({message: 'Name is required'});
+    }
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        return res.status(400).json({message: 'Valid email is required'});
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+    if (!password || !passwordRegex.test(password)) {
+        return res.status(400).json({
+            message: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character',
+        });
+    } 
+
     try {
         const existingUser = await findUserByEmail(email);
         if (existingUser) return res.status(400).json({message: 'Email already in use'});
@@ -18,6 +34,15 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     const {email, password} = req.body;
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        return res.status(400).json({message: 'Valid email is required'})
+    }
+
+    if (!password) {
+        return res.status(400).json({message: 'Password is required'});
+    }
+    
     try {
         const user = await findUserByEmail(email);
         if (!user) return res.status(400).json({message: 'Invalid credentials'});

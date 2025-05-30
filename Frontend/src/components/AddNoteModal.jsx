@@ -62,6 +62,11 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
         e.preventDefault();
         setError('');
 
+        if (!form.title.trim()) {
+            setError('Title cannot be empty');
+            return;
+        }
+
         try {
             const payload = {
                 title: form.title,
@@ -95,7 +100,7 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                     placeholder='Title'
                     value={form.title}
                     onChange={handleChange}
-                    required
+                    // required
                     style={{ width: '100%', marginBottom: '10px' }}
                 />
 

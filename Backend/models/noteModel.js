@@ -59,12 +59,10 @@ const createCategory = async (connection, name, userId) => {
 };
 
 const linkNoteCategory = async (connection, noteId, categoryId) => {
-    console.log('inserting in notecategories')
     await connection.execute(
         'INSERT INTO notecategories (note_id, category_id) VALUES (?, ?)',
         [noteId, categoryId]
     );
-    console.log('done')
 };
 
 const addCategoryToNote = async (noteId, categoryId) => {
@@ -113,8 +111,6 @@ const getFilteredNotes = async (userId, {
     // sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'} LIMIT ? OFFSET ?`;
     // params.push(parseInt(limit), parseInt(offset));
 
-    console.log(sql);
-    console.log(params);
     const [rows] = await db.query(sql, params);
     return rows;
 };
