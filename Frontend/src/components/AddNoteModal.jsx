@@ -6,6 +6,7 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
     const [form, setForm] = useState({ title: '', content: '', categories: [] });
     const [error, setError] = useState('');
     const [categoryOptions, setCategoryOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -67,6 +68,9 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
             return;
         }
 
+        if (loading) return;
+        setLoading(true);
+
         try {
             const payload = {
                 title: form.title,
@@ -87,6 +91,8 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
             setForm({ title: '', content: '', categories: [] });
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to create note');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -100,9 +106,11 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                     placeholder='Title'
                     value={form.title}
                     onChange={handleChange}
+                    maxLength={100}
                     // required
                     style={{ width: '100%', marginBottom: '10px' }}
                 />
+                <small>{form.title.length}/100</small>
 
                 <textarea
                     name='content'
@@ -121,6 +129,11 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                     onChange={handleCategoryChange}
                     placeholder='Select or create categories'
                     onCreateOption={(inputValue) => {
+                        if (inputValue.length > 30) {
+                            setError('Category name must be less that 30 characters');
+                            return;
+                        }
+                        setError('');
                         const newOption = { label: inputValue, value: inputValue };
                         const updated = [...form.categories, newOption];
                         setForm({ ...form, categories: updated });
@@ -128,10 +141,10 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                     styles={{ container: base => ({ ...base, marginBottom: '10px' }) }}
                 />
 
-                <button type='submit'>{note ? 'Update' : 'Create'}</button>
+                <button type='submit' disabled={loading}>{note ? 'Update' : 'Create'}</button>
                 <button type='button' onClick={onClose} style={{ marginLeft: '10px' }}>Cancel</button>
             </form>
 
         </div>
-    )
+    );
 }
