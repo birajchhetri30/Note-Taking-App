@@ -19,6 +19,7 @@ export default function Filter({ filterDropdownOpen, setFilterDropdownOpen, cate
                         options={categories}
                         isClearable
                         isMulti
+                        placeholder="Select categories"
                         closeMenuOnSelect={false}
                         value={selectedCategories}
                         onChange={(selectedOptions) => {
