@@ -7,6 +7,9 @@ import { IoIosClose } from "react-icons/io";
 import Select from 'react-select';
 import api from '../services/api';
 import SearchBox from './SearchBox';
+import Profile from './Profile';
+import Filter from './Filter';
+import Sort from './Sort';
 
 function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds }) {
     const [searchTerm, setSearchTerm] = useState(search);
@@ -15,7 +18,7 @@ function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOr
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [profileDropdown, setProfileDropdow] = useState(false);
 
     const navigate = useNavigate();
 
@@ -65,24 +68,59 @@ function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOr
 
     return (
         <nav
-            className="flex justify-between items-center p-2 bg-secondary-400 border-b-1 border-b-secondary-300"
-        // style={styles.nav}
+            className="flex justify-between items-center p-2 sticky top-0 z-50 bg-secondary-400 border-b-1 border-b-secondary-300 shadow-sm"
         >
-            <h1 className="text-xl font-semibold text-primary-100">Notes App</h1>
+            <h1
+                className="text-xl font-semibold text-primary-100"
+            >
+                Notes App
+            </h1>
 
-            <SearchBox
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                onChange={handleSearchChange}
-                handleSearchSubmit={handleSearchSubmit}
-                onSearch={onSearch}
-            />
-            
-            <button className="bg-secondary-400 text-white px-4 py-2 rounded hover:bg-secondary-500 transition">
-                + New
-            </button>
+
+            <div className='flex items-center sm:w1/2 md:w-1/2 lg:w-2/5'>
+                <SearchBox
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    onChange={handleSearchChange}
+                    handleSearchSubmit={handleSearchSubmit}
+                    onSearch={onSearch}
+                />
+
+                <Filter
+                    filterDropdownOpen={filterDropdownOpen}
+                    setFilterDropdownOpen={setFilterDropdownOpen}
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                    handleFilterSelect={handleFilterSelect}
+                    onFilterChange={onFilterChange}
+                />
+
+                <Sort 
+                    sortDropdownOpen={sortDropdownOpen}
+                    setSortDropdownOpen={setSortDropdownOpen}
+                    handleSortSelect={handleSortSelect}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                />
+            </div>
+
+            <div
+                className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer'
+                onClick={() => { setProfileDropdow((prev) => !prev) }}
+            >
+                <h2
+                    className='font-bold text-secondary-400'
+                >
+                    BC
+                </h2>
+            </div>
+
+            {profileDropdown && (
+                <Profile handleLogout={handleLogout} />
+            )}
+
         </nav>
-
     );
 
     {/*            

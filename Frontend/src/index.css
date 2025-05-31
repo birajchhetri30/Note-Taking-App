@@ -36,6 +36,18 @@
   .error_style {
     @apply text-red-600 p-2 m-1
   }
+
+  .dropdown {
+    @apply absolute p-1 border-2 border-primary-300 bg-secondary-200 rounded-2xl
+  }
+
+  .list_item {
+    @apply cursor-pointer p-2 hover:bg-primary-300 rounded-xl
+  }
+
+  .list {
+    @apply flex flex-col gap-1 text-secondary-400 font-bold
+  }
 }
 
 @theme {

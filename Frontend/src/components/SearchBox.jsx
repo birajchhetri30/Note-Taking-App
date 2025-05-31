@@ -4,7 +4,7 @@ import { IoIosClose } from "react-icons/io";
 export default function SearchBox({ searchTerm, setSearchTerm, onChange, handleSearchSubmit, onSearch }) {
     return (
         <div
-            className="flex items-center justify-between w-1/2 credentials_input"
+            className="flex items-center justify-between w-full credentials_input"
         >
             <input
                 className="w-full outline-none"
