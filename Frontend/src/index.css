@@ -7,7 +7,7 @@
   }
 
   body {
-    background-color: #412512;
+    background-color: #291204;
     overflow-x: hidden;
   }
 }
@@ -58,4 +58,5 @@
   --color-secondary-200: #9c6644;
   --color-secondary-300: #7f5539;
   --color-secondary-400: #412512;
+  --color-background: #291204;
 }
