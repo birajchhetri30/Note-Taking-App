@@ -62,6 +62,19 @@ export default function HomePage() {
         fetchNotes();
     }, [search, sortBy, sortOrder, categoryId]);
 
+    // Because the background was still scrollable when model was open
+    useEffect(() => {
+        if (modalIsOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [modalIsOpen]);
+
     const handleNoteCreated = (newNote) => {
         setNotes(prev => [...prev, newNote]);
         fetchNotes();
@@ -102,28 +115,14 @@ export default function HomePage() {
 
             <NoteList notes={notes} refreshNotes={fetchNotes} />
 
-            <AddNoteButton setModalIsOpen={setModalIsOpen}/>
+            <AddNoteButton setModalIsOpen={setModalIsOpen} />
 
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
                 contentLabel='Add note'
-                style={{
-                    overlay: {
-                        backgroundColor: 'rgba(0,0,0,0.2)',
-                    },
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        right: 'auto',
-                        bottom: 'auto',
-                        marginRight: '-50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '400px',
-                        padding: '20px',
-                        backgroundColor: 'black',
-                    }
-                }}
+                className="modal_style"
+                overlayClassName="modal_overlay_style"
             >
                 <AddNoteModal
                     onClose={() => setModalIsOpen(false)}
