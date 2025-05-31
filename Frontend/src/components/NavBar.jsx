@@ -4,7 +4,6 @@ import { removeToken } from '../services/auth';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 
-import Select from 'react-select';
 import api from '../services/api';
 import SearchBox from './SearchBox';
 import Profile from './Profile';
@@ -15,7 +14,6 @@ function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOr
     const [searchTerm, setSearchTerm] = useState(search);
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [profileDropdown, setProfileDropdow] = useState(false);
