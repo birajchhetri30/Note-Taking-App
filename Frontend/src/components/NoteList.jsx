@@ -39,22 +39,17 @@ export default function NoteList({ notes, refreshNotes }) {
         }
     };
 
-
-
     return (
-        <div>
-            <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '20px',
-                justifyContent: 'flex-start',
-            }}>
+        <div className='p-6 m-1'>
+            <div className='flex flex-wrap gap-x-10 gap-y-8 justify-center'>
                 {notes.map((note) => (
-                    <Note
-                        key={note.id}
-                        note={note}
-                        onEdit={openEditModal}
-                        onDelete={handleDelete} />
+                    <div key={note.id} className='w-1/4 group/note transition-all duration-300'>
+                        <Note
+                            key={note.id}
+                            note={note}
+                            onEdit={openEditModal}
+                            onDelete={handleDelete} />
+                    </div>
                 ))}
             </div>
 

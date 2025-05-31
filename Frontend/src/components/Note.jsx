@@ -3,46 +3,47 @@ import { MdDelete } from "react-icons/md";
 
 export default function Note({ note, onEdit, onDelete }) {
     return (
-        <div style={{
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            padding: '16px',
-            backgroundColor: 'black',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            position: 'relative'
-        }}>
-            <h3>{note.title}</h3>
-            <p>{note.content}</p>
-            <small>
-                Created: {new Date(note.created_at).toLocaleString()}
-            </small>
+        <div
+            className="relative flex flex-col justify-between h-[300px] p-4 bg-primary-300 border-3 border-secondary-300 rounded-[8px] shadow-lg
+            transition-all duration-300 transform 
+             group-hover/note:brightness-100 
+             group-hover/note:hover:brightness-115 group-hover/note:hover:scale-105"
+        >
+            <div>
+                <h3
+                    className="text-2xl text-secondary-400 overflow-hidden"
+                >
+                    {note.title}
+                </h3>
 
-            <div
-                style={{
-                    position: "absolute",
-                    bottom: "12px",
-                    right: "12px",
-                    display: "flex",
-                    gap: "8px",
-                }}
-            >
-                <MdEdit 
-                    onClick={() => onEdit(note)}
-                    style={{
-                        padding: "1px",
-                        color: "white",
-                        cursor: "pointer",
-                    }}
-                />
-                
-                <MdDelete
-                    onClick={() => onDelete(note.id)}
-                    style={{
-                        padding: "1px",
-                        color: "white",
-                        cursor: "pointer",
-                    }}
-                />
+                <hr className="border border-secondary-100 my-1" />
+
+                <p
+                    className="text-md text-secondary-400 mt-2 overflow-hidden"
+                >
+                    {note.content}
+                </p>
+            </div>
+
+            <div className="flex items-center justify-between">
+                <small
+                    className="text-secondary-300"
+                >
+                    {new Date(note.updated_at).toLocaleString()}
+                </small>
+
+                <div className="flex gap-2">
+                    <MdEdit
+                        className="text-secondary-400 cursor-pointer text-xl hover:brightness-170"
+                        onClick={() => onEdit(note)}
+
+                    />
+
+                    <MdDelete
+                        className="text-secondary-400 cursor-pointer text-xl hover:brightness-170"
+                        onClick={() => onDelete(note.id)}
+                    />
+                </div>
             </div>
         </div>
 
