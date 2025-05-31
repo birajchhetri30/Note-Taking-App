@@ -6,6 +6,7 @@ import NoteList from '../components/NoteList';
 import Modal from 'react-modal';
 import AddNoteModal from '../components/AddNoteModal';
 import NavBar from '../components/NavBar';
+import AddNoteButton from '../components/AddNoteButton';
 
 Modal.setAppElement('#root');
 
@@ -99,11 +100,9 @@ export default function HomePage() {
                 selectedCategoryIds={selectedCategories}
             />
 
-            <h2>Your Notes</h2>
-
             <NoteList notes={notes} refreshNotes={fetchNotes} />
 
-            <button onClick={() => setModalIsOpen(true)}>+ New Note</button>
+            <AddNoteButton setModalIsOpen={setModalIsOpen}/>
 
             <Modal
                 isOpen={modalIsOpen}
