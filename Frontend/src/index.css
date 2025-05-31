@@ -18,7 +18,7 @@
   }
 
   .credentials_input {
-    @apply w-full bg-primary-300 p-2 border-2 border-secondary-300 rounded-[5px] placeholder-secondary-200 text-secondary-400 hover:brightness-120
+    @apply w-full bg-primary-300 p-2 border-2 border-secondary-300 rounded-[5px] placeholder-secondary-200 text-secondary-400 hover:brightness-120 focus:brightness-120
   }
 
   .button {
@@ -47,6 +47,14 @@
 
   .list {
     @apply flex flex-col gap-1 text-secondary-400 font-bold
+  }
+
+  .modal_style {
+    @apply absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 p-6 bg-primary-300 border-3 border-secondary-300 rounded-lg shadow-lg
+  }
+
+  .modal_overlay_style {
+    @apply fixed inset-0 backdrop-blur-sm bg-black/20 flex justify-center items-center z-50
   }
 }
 
