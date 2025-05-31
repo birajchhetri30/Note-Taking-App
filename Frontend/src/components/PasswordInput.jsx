@@ -17,7 +17,7 @@ export default function PasswordInput({ name, value, onChange }) {
                 value={value}
                 type={showPassword ? 'text' : 'password'}
                 onChange={onChange}
-                placeholder="Password"
+                placeholder= {name === "password" ? "Password" : "Confirm password"} 
             />
 
             {showPassword ? (
