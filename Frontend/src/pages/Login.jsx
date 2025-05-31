@@ -4,13 +4,12 @@ import api from '../services/api';
 import { setToken } from '../services/auth';
 import TextInput from '../components/TextInput';
 import PasswordInput from '../components/PasswordInput';
-
+import AuthRedirectLink from '../components/AuthRedirectLink';
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
 
@@ -54,8 +53,8 @@ export default function Login() {
             <div className='bg-primary-200 h-3/4 sm:w-1/2 md:1/2 lg:w-1/3 xl:w-1/4 p-6 rounded-3xl shadow-2xl flex flex-col items-center'>
                 <h1 className="h1 mt-10">Login</h1>
                 <form onSubmit={handleSubmit} className="credentials_form mt-20">
-                    <TextInput name='email' value={form.email} onChange={handleChange}/>
-                    <PasswordInput name='password' value={form.password} onChange={handleChange}/>
+                    <TextInput name='email' value={form.email} onChange={handleChange} />
+                    <PasswordInput name='password' value={form.password} onChange={handleChange} />
                     <button
                         className="button"
                         type='submit' disabled={loading}
@@ -64,6 +63,7 @@ export default function Login() {
                     </button>
                 </form>
                 {error && <p className="error_style">{error}</p>}
+                <AuthRedirectLink text="Don't have an account?" linkText={"Register"} to="/register" />
             </div>
         </div>
     );
