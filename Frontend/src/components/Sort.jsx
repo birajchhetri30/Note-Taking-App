@@ -4,10 +4,10 @@ export default function Sort({ sortDropdownOpen, setSortDropdownOpen, handleSort
     return (
         <div className="relative inline-block">
             <div
-                className="rounded-full bg-primary-300 border-2 border-secondary-300 p-2 mx-2 cursor-pointer"
+                className="rounded-full bg-primary-300 border-2 border-secondary-300 p-2 cursor-pointer"
                 onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
             >
-                <TbArrowsSort />
+                <TbArrowsSort className='text-secondary-400'/>
             </div>
 
             {sortDropdownOpen && (

@@ -14,7 +14,7 @@
 
 @layer components {
   .h1 {
-    @apply text-5xl text-black p-2
+    @apply text-5xl text-secondary-400 p-2
   }
 
   .credentials_input {
