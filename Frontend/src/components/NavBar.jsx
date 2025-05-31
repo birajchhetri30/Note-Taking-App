@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../services/auth';
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { IoIosClose } from "react-icons/io";
 
 import api from '../services/api';
 import SearchBox from './SearchBox';
@@ -16,9 +14,34 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [profileDropdown, setProfileDropdow] = useState(false);
+    const [profileDropdown, setProfileDropdownOpen] = useState(false);
 
     const navigate = useNavigate();
+
+    const filterRef = useRef(null);
+    const sortRef = useRef(null);
+    const profileRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (filterRef.current && !filterRef.current.contains(e.target)) {
+                setFilterDropdownOpen(false);
+            }
+
+            if (sortRef.current && !sortRef.current.contains(e.target)) {
+                setSortDropdownOpen(false);
+            }
+
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setProfileDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -92,20 +115,24 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                     setSelectedCategories={setSelectedCategories}
                     handleFilterSelect={handleFilterSelect}
                     onFilterChange={onFilterChange}
+                    ref={filterRef}
                 />
 
-                <Sort 
+                <Sort
                     sortDropdownOpen={sortDropdownOpen}
                     setSortDropdownOpen={setSortDropdownOpen}
                     handleSortSelect={handleSortSelect}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
+                    ref={sortRef}
                 />
+
+
             </div>
 
-            <div
+            <div ref={profileRef}
                 className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer hover:brightness-120'
-                onClick={() => { setProfileDropdow((prev) => !prev) }}
+                onClick={() => { setProfileDropdownOpen((prev) => !prev) }}
             >
                 <h2
                     className='font-bold text-secondary-400'
