@@ -18,7 +18,7 @@ export default function SearchBox({ searchTerm, setSearchTerm, onChange, handleS
             <div className="flex items-center">
                 {searchTerm !== "" && (
                     <IoIosClose
-                        className="cursor-pointer size-6 mr-1"
+                        className="cursor-pointer text-2xl mr-1 hover:brightness-50"
                         onClick={() => {
                             setSearchTerm('');
                             if (onSearch) onSearch('');
@@ -27,7 +27,7 @@ export default function SearchBox({ searchTerm, setSearchTerm, onChange, handleS
                 )}
 
                 <FaMagnifyingGlass
-                    className="mr-1 fill-secondary-400 cursor-pointer"
+                    className="mr-1 fill-secondary-400 cursor-pointer hover:brightness-50"
                     onClick={handleSearchSubmit}
                 />
             </div>

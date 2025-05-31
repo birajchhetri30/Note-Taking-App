@@ -5,7 +5,7 @@ export default function Filter({ filterDropdownOpen, setFilterDropdownOpen, cate
     return (
         <div className="relative inline-block">
             <div
-                className="rounded-full bg-primary-300 border-2 border-secondary-300 p-2 mx-2 cursor-pointer"
+                className="rounded-full bg-primary-300 border-2 border-secondary-300 p-2 mx-2 cursor-pointer hover:brightness-120"
                 onClick={() => setFilterDropdownOpen((prev) => !prev)}
             >
                 <FaFilter className='fill-secondary-400'/>

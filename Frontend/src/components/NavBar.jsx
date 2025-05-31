@@ -104,7 +104,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
             </div>
 
             <div
-                className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer'
+                className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer hover:brightness-120'
                 onClick={() => { setProfileDropdow((prev) => !prev) }}
             >
                 <h2

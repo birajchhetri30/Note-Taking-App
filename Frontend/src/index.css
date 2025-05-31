@@ -18,11 +18,11 @@
   }
 
   .credentials_input {
-    @apply w-full bg-primary-300 p-2 border-2 border-secondary-300 rounded-[5px] placeholder-secondary-200 text-secondary-400
+    @apply w-full bg-primary-300 p-2 border-2 border-secondary-300 rounded-[5px] placeholder-secondary-200 text-secondary-400 hover:brightness-120
   }
 
   .button {
-    @apply text-primary-100 bg-secondary-400 border-2 border-secondary-100 rounded-[5px] p-2 cursor-pointer disabled:bg-secondary-300 disabled:text-primary-200 disabled:border-secondary-400 disabled:cursor-not-allowed
+    @apply text-primary-100 bg-secondary-400 border-2 border-secondary-100 rounded-[5px] p-2 cursor-pointer disabled:bg-secondary-300 disabled:text-primary-200 disabled:border-secondary-400 disabled:cursor-not-allowed hover:brightness-120
   }
 
   .login_card {
@@ -30,7 +30,7 @@
   }
 
   .credentials_form {
-    @apply flex flex-col gap-5 w-full relative
+    @apply flex flex-col gap-5 w-full relative 
   }
 
   .error_style {
