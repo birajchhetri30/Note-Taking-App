@@ -3,6 +3,7 @@ import Note from './Note';
 import api from '../services/api';
 import Modal from 'react-modal';
 import AddNoteModal from './AddNoteModal';
+import ViewNoteModal from './ViewNoteModal';
 
 export default function NoteList({ notes, refreshNotes }) {
     if (notes.length === 0) {
@@ -11,6 +12,11 @@ export default function NoteList({ notes, refreshNotes }) {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
+    const [viewingNoteId, setViewingNoteId] = useState(null);
+
+    const handleViewNote = (id) => {
+        setViewingNoteId(id);
+    }
 
     const openEditModal = (note) => {
         setEditingNote(note);
@@ -48,7 +54,9 @@ export default function NoteList({ notes, refreshNotes }) {
                             key={note.id}
                             note={note}
                             onEdit={openEditModal}
-                            onDelete={handleDelete} />
+                            onDelete={handleDelete}
+                            onView={handleViewNote}
+                        />
                     </div>
                 ))}
             </div>
@@ -64,6 +72,19 @@ export default function NoteList({ notes, refreshNotes }) {
                     onClose={closeModal}
                     onNoteUpdated={handleNoteSaved}
                     note={editingNote}
+                />
+            </Modal>
+
+            <Modal
+                isOpen={!!viewingNoteId}
+                onRequestClose={() => setViewingNoteId(null)}
+                contentLabel="View note"
+                className="modal_style max-h-[90vh] overflow-y-auto"
+                overlayClassName="modal_overlay_style"
+            >
+                <ViewNoteModal
+                    noteId={viewingNoteId}
+                    onClose={() => setViewingNoteId(null)}
                 />
             </Modal>
         </div>

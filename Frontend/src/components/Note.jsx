@@ -3,7 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function Note({ note, onEdit, onDelete }) {
+export default function Note({ note, onEdit, onDelete, onView }) {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
 
@@ -21,7 +21,8 @@ export default function Note({ note, onEdit, onDelete }) {
 
     return (
         <div
-            className="relative flex flex-col justify-between h-[300px] p-4 bg-primary-300 border-3 border-secondary-300 rounded-[8px] shadow-lg
+            onClick={() => onView(note.id)}
+            className="relative flex flex-col justify-between h-[300px] p-4 bg-primary-300 border-3 border-secondary-300 rounded-[8px] shadow-lg cursor-pointer
             transition-all duration-300 transform 
              group-hover/note:brightness-100 
              group-hover/note:hover:brightness-115 group-hover/note:hover:scale-105"
@@ -60,19 +61,32 @@ export default function Note({ note, onEdit, onDelete }) {
                     <small
                         className="text-secondary-300"
                     >
-                        {new Date(note.updated_at).toLocaleString()}
+                        {new Date(note.updated_at).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })} • {new Date(note.updated_at).toLocaleTimeString(undefined, {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
                     </small>
 
                     <div className="flex gap-2">
                         <MdEdit
                             className="text-secondary-400 cursor-pointer text-xl hover:brightness-170"
-                            onClick={() => onEdit(note)}
+                            onClick={(e) => {
+                                e.stopPropagation(); // Because first ViewNoteModal was being called
+                                onEdit(note);
+                            }}
 
                         />
 
                         <MdDelete
                             className="text-secondary-400 cursor-pointer text-xl hover:brightness-170"
-                            onClick={() => onDelete(note.id)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(note.id);
+                            }}
                         />
                     </div>
                 </div>
