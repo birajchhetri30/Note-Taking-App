@@ -10,7 +10,7 @@ import Profile from './Profile';
 import Filter from './Filter';
 import Sort from './Sort';
 
-function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds }) {
+export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds }) {
     const [searchTerm, setSearchTerm] = useState(search);
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
