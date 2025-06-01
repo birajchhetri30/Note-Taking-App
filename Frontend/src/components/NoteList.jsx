@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Note from './Note';
 import api from '../services/api';
 import Modal from 'react-modal';
@@ -44,6 +44,19 @@ export default function NoteList({ notes, refreshNotes }) {
             }
         }
     };
+
+    // Because the background was still scrollable when model was open
+    useEffect(() => {
+        if (modalOpen || viewingNoteId) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [modalOpen, viewingNoteId]);
 
     return (
         <div className='p-6 m-1'>
