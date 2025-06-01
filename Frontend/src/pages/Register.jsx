@@ -108,7 +108,7 @@ export default function Register() {
                         type='submit' disabled={loading}>Register</button>
                 </form>
                 {error && <p className='error_style mb-0'>{error}</p>}
-                <AuthRedirectLink text="Already have an account?" linkText="Login" to="/login" />
+                <AuthRedirectLink text="Already have an account?" linkText="Sign in" to="/login" />
             </div>
         </div>
     )

@@ -51,8 +51,8 @@ export default function Login() {
     return (
         <div className='login_card'>
             <div className='bg-primary-200 h-3/4 sm:w-1/2 md:1/2 lg:w-1/3 xl:w-1/4 p-6 rounded-3xl shadow-2xl flex flex-col items-center'>
-                <h1 className="h1 mt-10">Login</h1>
-                <form onSubmit={handleSubmit} className="credentials_form mt-20">
+                <h1 className="h1 mt-10">Sign in to Notes</h1>
+                <form onSubmit={handleSubmit} className="credentials_form mt-10">
                     <TextInput name='email' value={form.email} onChange={handleChange} />
                     <PasswordInput name='password' value={form.password} onChange={handleChange} />
                     <button
@@ -63,7 +63,7 @@ export default function Login() {
                     </button>
                 </form>
                 {error && <p className="error_style">{error}</p>}
-                <AuthRedirectLink text="Don't have an account?" linkText={"Register"} to="/register" />
+                <AuthRedirectLink text="New to Notes?" linkText={"Create an account"} to="/register" />
             </div>
         </div>
     );
