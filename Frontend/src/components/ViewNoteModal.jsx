@@ -30,11 +30,15 @@ export default function ViewNoteModal({ noteId, onClose, buttonText }) {
         }
     }, [noteId]);
 
-    if (!note) return <p>Loading...</p>;
+    if (!note) return (
+        <div className='flex w-full justify-center items-center'>
+            <p className='text-xl text-secondary-200'>Loading note...</p>
+        </div>
+    );
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl mb-2 text-secondary-400">{note.title}</h2>
+            <h2 className="text-2xl mb-2 text-secondary-400 break-words">{note.title}</h2>
 
             <hr className="border border-secondary-100 my-1" />
 
@@ -46,7 +50,7 @@ export default function ViewNoteModal({ noteId, onClose, buttonText }) {
                 ))}
             </div>
 
-            <p className="text-secondary-400 whitespace-pre-wrap">{note.content}</p>
+            <p className="text-secondary-400 whitespace-pre-wrap break-words">{note.content}</p>
 
             <div className="my-2 flex justify-between items-center">
                 <small
