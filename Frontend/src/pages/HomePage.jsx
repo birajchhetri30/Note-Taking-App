@@ -112,8 +112,12 @@ export default function HomePage() {
         setSortOrder(newSortOrder);
     }
 
-    if (loading) return <p>Loading notes...</p>;
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+    if (loading) return (
+        <div className='flex h-[90vh] w-full justify-center items-center'>
+            <p className='text-3xl text-primary-200'>Loading notes...</p>
+        </div>
+    );
+    if (error) return <p className='error_style'>{error}</p>;
 
     return (
         <div>
