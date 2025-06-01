@@ -8,7 +8,7 @@ import Profile from './Profile';
 import Filter from './Filter';
 import Sort from './Sort';
 
-export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds }) {
+export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds, user }) {
     const [searchTerm, setSearchTerm] = useState(search);
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -64,6 +64,17 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
             selectedCategoryIds.map(id => categories.find(cat => cat.value === id)).filter(Boolean)
         );
     }, [selectedCategoryIds, categories]);
+
+    const getInitials = (name) => {
+        if (!name) return "NA";
+        const nameParts = name.trim().split(" ");
+        if (nameParts.length === 1) {
+            return nameParts[0].substring(0, 2).toUpperCase();
+        }
+        return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+    };
+
+    const userInitials = getInitials(user.name)
 
     const handleLogout = () => {
         removeToken();
@@ -130,20 +141,22 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
 
             </div>
 
-            <div ref={profileRef}
-                className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer hover:brightness-120'
-                onClick={() => { setProfileDropdownOpen((prev) => !prev) }}
-            >
-                <h2
-                    className='font-bold text-secondary-400'
+            <div ref={profileRef}>
+                <div
+                    className='p-2 mx-2 bg-secondary-200 border-2 border-primary-300 rounded-full cursor-pointer hover:brightness-120'
+                    onClick={() => { setProfileDropdownOpen((prev) => !prev) }}
                 >
-                    BC
-                </h2>
-            </div>
+                    <h2
+                        className='font-bold text-secondary-400'
+                    >
+                        {userInitials}
+                    </h2>
+                </div>
 
-            {profileDropdown && (
-                <Profile handleLogout={handleLogout} />
-            )}
+                {profileDropdown && (
+                    <Profile email={user.email} handleLogout={handleLogout} />
+                )}
+            </div>
 
         </nav>
     );
