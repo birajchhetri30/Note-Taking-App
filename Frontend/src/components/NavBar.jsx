@@ -154,7 +154,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                 </div>
 
                 {profileDropdown && (
-                    <Profile email={user.email} handleLogout={handleLogout} />
+                    <Profile name={user.name} email={user.email} handleLogout={handleLogout} />
                 )}
             </div>
 
