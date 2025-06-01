@@ -4,15 +4,22 @@ import api from '../services/api';
 import Modal from 'react-modal';
 import AddNoteModal from './AddNoteModal';
 import ViewNoteModal from './ViewNoteModal';
+import { toast } from 'react-toastify';
+
 
 export default function NoteList({ notes, refreshNotes }) {
     if (notes.length === 0) {
-        return <p>No notes found</p>;
+        return (
+            <div className='flex h-[90vh] w-full justify-center items-center'>
+                <p className='text-5xl text-primary-200'>No notes found</p>
+            </div>
+        )
     }
 
     const [modalOpen, setModalOpen] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
     const [viewingNoteId, setViewingNoteId] = useState(null);
+    const [confirmDeleteNoteId, setConfirmDeleteNoteId] = useState(null);
 
     const handleViewNote = (id) => {
         setViewingNoteId(id);
@@ -34,16 +41,20 @@ export default function NoteList({ notes, refreshNotes }) {
     };
 
     const handleDelete = async (noteId) => {
-        if (window.confirm("Delete this note?")) {
-            try {
-                await api.delete(`/notes/${noteId}`);
-                if (refreshNotes) refreshNotes();
-            } catch (err) {
-                alert("Failed to delete note");
-                console.error(err);
-            }
-        }
+        setConfirmDeleteNoteId(noteId);
     };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await api.delete(`/notes/${confirmDeleteNoteId}`);
+            setConfirmDeleteNoteId(null);
+            toast.success("Note deleted")
+            if (refreshNotes) refreshNotes();
+        } catch (err) {
+            toast.error("Failed to delete note")
+            console.error(err);
+        }
+    }
 
     // Because the background was still scrollable when model was open
     useEffect(() => {
@@ -97,9 +108,25 @@ export default function NoteList({ notes, refreshNotes }) {
             >
                 <ViewNoteModal
                     noteId={viewingNoteId}
+                    buttonText="Close"
                     onClose={() => setViewingNoteId(null)}
                 />
             </Modal>
+
+            <Modal
+                isOpen={!!confirmDeleteNoteId}
+                onRequestClose={() => setConfirmDeleteNoteId(null)}
+                contentLabel="Confirm delete"
+                className="modal_style max-h-[90vh] overflow-y-auto"
+                overlayClassName="modal_overlay_style"
+            >
+                <ViewNoteModal
+                    noteId={confirmDeleteNoteId}
+                    buttonText="Delete"
+                    onClose={handleConfirmDelete}
+                />
+            </Modal>
+
         </div>
 
     );

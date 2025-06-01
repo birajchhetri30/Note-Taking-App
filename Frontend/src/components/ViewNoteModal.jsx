@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function ViewNoteModal({ noteId, onClose }) {
+export default function ViewNoteModal({ noteId, onClose, buttonText }) {
     const [note, setNote] = useState(null);
     const [categories, setCategories] = useState([]);
 
@@ -62,7 +62,7 @@ export default function ViewNoteModal({ noteId, onClose }) {
                     })}
                 </small>
 
-                <button onClick={onClose} className="button">Close</button>
+                <button onClick={onClose} className="button">{buttonText}</button>
 
             </div>
 
