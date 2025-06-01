@@ -24,9 +24,25 @@ const getCategoriesByUserId = async (userId) => {
         [userId]
     );
     return rows;
-} 
+};
+
+const deleteCategoryById = async (categoryId, userId) => {
+    await db.execute(
+        `DELETE FROM categories WHERE id = ? AND user_id = ?`,
+        [categoryId, userId]
+    );
+};
+
+const deleteAllUserCategories = async (userId) => {
+    await db.execute(
+        `DELETE FROM categories WHERE user_id = ?`,
+        [userId]
+    );
+};
 
 module.exports = {
     getCategoriesByNoteId,
     getCategoriesByUserId,
+    deleteCategoryById,
+    deleteAllUserCategories
 };

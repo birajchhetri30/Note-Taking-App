@@ -7,5 +7,7 @@ router.use(authMiddleware);
 
 router.get('/notes/:id/categories', categoryController.getCategoriesForNote);
 router.get('/', categoryController.getAllCategories);
+router.delete('/:id', categoryController.deleteCategory);
+router.delete('/', categoryController.deleteAllCategories);
 
 module.exports = router;
