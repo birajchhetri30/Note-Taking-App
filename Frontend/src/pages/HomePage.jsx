@@ -22,6 +22,7 @@ export default function HomePage() {
     const [sortOrder, setSortOrder] = useState('DESC');
     const [selectedCategories, setSelectedCategories] = useState([]);
 
+    const [user, setUser] = useState(null);
 
     const navigate = useNavigate();
 
@@ -52,9 +53,22 @@ export default function HomePage() {
     };
 
     useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await api.get('/users/me');
+                setUser(res.data);
+            } catch (err) {
+                console.error('Failed to fetch user info', err);
+                removeToken();
+                navigate('/login')
+            }
+        };
+
         const token = getToken();
         if (!token) {
             navigate('/login');
+        } else {
+            fetchUser();
         }
     }, [navigate]);
 
@@ -111,6 +125,7 @@ export default function HomePage() {
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 selectedCategoryIds={selectedCategories}
+                user={user}
             />
 
             <NoteList notes={notes} refreshNotes={fetchNotes} />
