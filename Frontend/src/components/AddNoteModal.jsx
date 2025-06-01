@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import CreatableSelect from 'react-select/creatable';
 import TextInput from "./TextInput";
+import { toast } from 'react-toastify';
 
 export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdated }) {
     const [form, setForm] = useState({ title: '', content: '', categories: [] });
@@ -82,16 +83,18 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
             if (note) {
                 // Edit mode so send PUT request
                 await api.put(`/notes/${note.id}`, payload);
+                toast.success('Note updated');
                 if (onNoteUpdated) onNoteUpdated();
             } else {
                 const res = await api.post('/notes', payload);
+                toast.success('Note created');
                 if (onNoteCreated) onNoteCreated(res.data);
             }
 
             onClose();
             setForm({ title: '', content: '', categories: [] });
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to create note');
+            setError(err.response?.data?.error || `Failed to ${note ? 'edit' : 'create'} note`);
         } finally {
             setLoading(false);
         }
