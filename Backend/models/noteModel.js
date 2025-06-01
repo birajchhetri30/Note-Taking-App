@@ -84,8 +84,8 @@ const getFilteredNotes = async (userId, {
     const params = [userId];
 
     if (search) {
-        sql += ' AND n.title LIKE ?';
-        params.push(`%${search}%`);
+        sql += ' AND (n.title LIKE ? OR n.content LIKE ?)';
+        params.push(`%${search}%`, `%${search}%`);
     }
 
     if (categoryId.length > 0) {
