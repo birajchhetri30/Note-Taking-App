@@ -73,7 +73,7 @@ export default function NoteList({ notes, refreshNotes }) {
         <div className='p-6 m-1'>
             <div className='flex flex-wrap gap-x-10 gap-y-8 justify-center'>
                 {notes.map((note) => (
-                    <div key={note.id} className='w-1/4 group/note transition-all duration-300'>
+                    <div key={note.id} className='w-1/4 '>
                         <Note
                             key={note.id}
                             note={note}

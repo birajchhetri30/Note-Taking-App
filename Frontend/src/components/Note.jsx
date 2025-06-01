@@ -23,9 +23,7 @@ export default function Note({ note, onEdit, onDelete, onView }) {
         <div
             onClick={() => onView(note.id)}
             className="relative flex flex-col justify-between h-[300px] p-4 bg-primary-300 border-3 border-secondary-300 rounded-[8px] shadow-lg cursor-pointer
-            transition-all duration-300 transform 
-             group-hover/note:brightness-100 
-             group-hover/note:hover:brightness-115 group-hover/note:hover:scale-105"
+            transition-all duration-300 transform hover:brightness-115 hover:scale-105"
         >
             <div>
                 <h3
