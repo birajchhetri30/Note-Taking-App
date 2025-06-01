@@ -7,6 +7,9 @@ import SearchBox from './SearchBox';
 import Profile from './Profile';
 import Filter from './Filter';
 import Sort from './Sort';
+import CategoryModal from './CategoryModal';
+import Modal from 'react-modal';
+
 
 export default function NavBar({ search, onSearch, onFilterChange, onSortChange, sortBy, sortOrder, selectedCategoryIds, user }) {
     const [searchTerm, setSearchTerm] = useState(search);
@@ -15,6 +18,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [profileDropdown, setProfileDropdownOpen] = useState(false);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -98,6 +102,10 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
         if (onSortChange) onSortChange(sortBy);
     };
 
+    const handleCategories = () => {
+        setShowCategoryModal(true);
+    };
+
     return (
         <nav
             className="flex justify-between items-center p-2 sticky top-0 z-50 bg-secondary-400 border-b-1 border-b-secondary-300 shadow-sm"
@@ -154,10 +162,19 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                 </div>
 
                 {profileDropdown && (
-                    <Profile name={user.name} email={user.email} handleLogout={handleLogout} />
+                    <Profile name={user.name} email={user.email} handleCategories={handleCategories} handleLogout={handleLogout} />
                 )}
             </div>
 
+            <Modal
+                isOpen={showCategoryModal}
+                onRequestClose={() => setShowCategoryModal(false)}
+                contentLabel='View Categories'
+                className="modal_style max-h-[90vh] overflow-y-auto"
+                overlayClassName="modal_overlay_style"
+            >
+                <CategoryModal isOpen={showCategoryModal} onClose={() => setShowCategoryModal(false)} />
+            </Modal>
         </nav>
     );
 }
