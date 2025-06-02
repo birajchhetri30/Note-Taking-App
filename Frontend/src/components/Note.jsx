@@ -35,7 +35,7 @@ export default function Note({ note, onEdit, onDelete, onView }) {
                 <hr className="border border-secondary-100 my-1" />
 
                 <p
-                    className="text-md text-secondary-400 mt-2 line-clamp-4"
+                    className="text-md text-secondary-400 mt-2 break-words line-clamp-4"
                 >
                     {note.content}
                 </p>
