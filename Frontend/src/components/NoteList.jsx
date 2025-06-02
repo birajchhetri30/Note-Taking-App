@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 
 export default function NoteList({ notes, refreshNotes }) {
-    if (notes.length === 0) {
+    if (!Array.isArray(notes) || notes.length === 0) {
         return (
             <div className='flex h-[90vh] w-full justify-center items-center'>
                 <p className='text-5xl text-primary-200'>No notes found</p>
