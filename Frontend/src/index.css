@@ -56,6 +56,10 @@
   .modal_overlay_style {
     @apply fixed inset-0 backdrop-blur-sm bg-black/20 flex justify-center items-center z-50
   }
+
+  .pagination_button {
+    @apply text-primary-300 text-3xl border-2 rounded-full border-secondary-300 cursor-pointer hover:brightness-120 transition-all duration-200 hover:scale-110 disabled:brightness-50 disabled:scale-100 disabled:cursor-default
+  }
 }
 
 @theme {
@@ -66,5 +70,6 @@
   --color-secondary-200: #9c6644;
   --color-secondary-300: #7f5539;
   --color-secondary-400: #412512;
+  --color-navbar: #412512;
   --color-background: #291204;
 }
