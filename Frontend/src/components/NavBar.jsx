@@ -108,7 +108,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
 
     return (
         <nav
-            className="flex justify-between items-center p-2 sticky top-0 z-50 bg-secondary-400 border-b-1 border-b-secondary-300 shadow-sm"
+            className="flex justify-between items-center p-2 sticky top-0 z-50 bg-navbar border-b-1 border-b-secondary-300 shadow-sm"
         >
             <h1
                 className="text-xl font-semibold text-primary-100 ml-2"
