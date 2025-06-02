@@ -57,7 +57,7 @@ export default function Note({ note, onEdit, onDelete, onView }) {
 
                 <div className="flex items-center justify-between">
                     <small
-                        className="text-secondary-300"
+                        className="text-secondary-300 line-clamp-3"
                     >
                         {new Date(note.updated_at).toLocaleDateString(undefined, {
                             year: 'numeric',
