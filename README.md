@@ -95,6 +95,11 @@
 
 <p>Protects all <code>/notes</code> and <code>/categories</code> routes to ensure only authenticated users can access.</p>
 
+<h3>Authentication (if using API directly with Postman or other similar apps)</h3>
+
+<p>All protected routes require a JWT token. After logging in, include the token in the <code>Authorization</code> header like this:</p>
+<pre><code>Authorization: Bearer &lt;your_token_here&gt;</code></pre>
+
 
 <h1>Database Schema</h1>
 
@@ -185,12 +190,46 @@ INSERT INTO categories (name, user_id) VALUES
 <pre><code>https://github.com/birajchhetri30/Note-Taking-App.git
 cd Note-Taking-App</code></pre>
 
-<h3>2. Install Dependencies</h3>
+<h3>2. Navigate to the backend directory</h3>
+<pre><code>cd Backend</code></pre>
+
+<h3>3. Install Dependencies</h3>
 <pre><code>npm install</code></pre>
 
-<h3>3. Configure Environment Variables</h3>
+<h3>4. Configure Environment Variables</h3>
 <p>Create a <code>.env</code> file in the backend root by copying <code>.env.example</code> and filling in the actual credentials.</p>
 
-<h3>4. Start the Server</h3>
+<h3>5. Start the Server</h3>
 <pre><code>npm run dev</code></pre>
+
+<h1>Frontend Setup (Vite + React)</h1>
+<h3>1. Navigate to the frontend directory</h3>
+<pre><code>cd Frontend</code></pre>
+
+<h3>2. Install dependencies</h3>
+<pre><code>npm install</code></pre>
+
+<h3>3. Start the development server</h3>
+<pre><code>npm run dev</code></pre>
+
+<p>Note: Make sure your backend server is running at the API base URL configured in the frontend (<code>http://localhost:5000</code>)</p>
+
+<h1>Engineering Decisions</h1>
+<ul>
+  <li>Chose MySQL as a relational database for structured data and referential integrity.</li>
+  <li>Implemented JWT authentication for secure stateless sessions.</li>
+  <li>Used many-to-many relationship between notes and categories via a junction table (<code>notecategories</code>). This is because one note can have many categories and one category can be used by many notes.</li>
+  <li>Added a <code>unique_user_category</code> constraint to prevent duplicate category names per user.</li>
+  <li>Frontend is built with React + Vite for fast dev builds and modular component structure.</li>
+  <li>Axios interceptors are used in the frontend to automatically attach JWT tokens to all requests.</li>
+    <li>LocalStorage is used to persist JWT tokens so that users stay logged in across page reloads.</li>
+
+</ul>
+
+<h1>Assumptions Made</h1>
+<ul>
+  <li>Users will interact with the API through the React frontend, so manual token handling is not required.</li>
+  <li>Only authenticated users can create, view, update, or delete notes and categories.</li>
+  <li>Predefined categories are shared across all users and cannot be deleted or modified by them.</li>
+</ul>
 
