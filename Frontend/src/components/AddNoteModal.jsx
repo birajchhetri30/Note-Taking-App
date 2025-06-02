@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import CreatableSelect from 'react-select/creatable';
 import TextInput from "./TextInput";
 import { toast } from 'react-toastify';
+import CategorySelect from "./CategorySelect";
 
 export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdated }) {
     const [form, setForm] = useState({ title: '', content: '', categories: [] });
@@ -132,27 +132,22 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
 
                 <label className="mx-1 my-2 text-secondary-400">Categories (optional)</label>
 
-                <div className="lg:w-1/2 md:w-1/2">
-                    <CreatableSelect
-                        isMulti
-                        options={categoryOptions}
-                        value={form.categories}
-                        onChange={handleCategoryChange}
-                        placeholder='Select or create categories'
-                        onCreateOption={(inputValue) => {
-                            if (inputValue.length > 20) {
-                                setError('Category name must be less that 20 characters');
-                                return;
-                            }
-                            setError('');
-                            const newOption = { label: inputValue, value: inputValue };
-                            const updated = [...form.categories, newOption];
-                            setForm({ ...form, categories: updated });
-                        }}
-                        styles={styles}
-                    />
-                </div>
-
+                <CategorySelect
+                    value={form.categories}
+                    options={form.categories}
+                    onChange={handleCategoryChange}
+                    onCreateOption={(inputValue) => {
+                        if (inputValue.length > 20) {
+                            setError('Category name must be less that 20 characters');
+                            return;
+                        }
+                        setError('');
+                        const newOption = { label: inputValue, value: inputValue };
+                        const updated = [...form.categories, newOption];
+                        setForm({ ...form, categories: updated });
+                    }}
+                />
+                
                 <div className="flex items-center justify-end">
                     <button className='button mt-3' type='submit' disabled={loading}>{note ? 'Update' : 'Create'}</button>
                     <button className='button mt-3 bg-transparent text-secondary-400' type='button' onClick={onClose} style={{ marginLeft: '10px' }}>Cancel</button>
@@ -163,40 +158,4 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
 
         </div>
     );
-}
-
-
-const styles = {
-    menu: (provided) => ({
-        ...provided,
-        backgroundColor: "#9c6644",
-        borderRadius: '0.75rem',
-        borderWidth: '2px',
-        borderColor: '#ddb892',
-        padding: '0.25rem',
-    }),
-    option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isFocused ? '#ddb892' : 'transparent',
-        cursor: 'pointer',
-        borderRadius: '0.75rem',
-        padding: '0.5rem',
-        color: '#412512',
-        fontWeight: 'bold',
-
-    }),
-    control: (provided) => ({
-        ...provided,
-        backgroundColor: '#ddb892',
-        borderRadius: '0.75rem',
-        borderColor: '#b08968',
-    }),
-    multiValue: (provided) => ({
-        ...provided,
-        backgroundColor: "#7f5539",
-    }),
-    multiValueLabel: (provided) => ({
-        ...provided,
-        color: '#ede0d4',
-    }),
 }
