@@ -4,21 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import PasswordInput from '../components/PasswordInput';
 import TextInput from '../components/TextInput';
 import AuthRedirectLink from '../components/AuthRedirectLink';
-import { FaRegCheckCircle, FaRegCircle  } from "react-icons/fa";
+import { FaRegCheckCircle, FaRegCircle } from "react-icons/fa";
 
 
 export default function Register() {
     const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const passwordConditions = {
-        length: form.password.length >= 8,
-        lowercase: /[a-z]/.test(form.password),
-        uppercase: /[A-Z]/.test(form.password),
-        number: /\d/.test(form.password),
-        specialChar: /[@$!%*?#&.,';:"^()]/.test(form.password)
-    };
 
     const navigate = useNavigate();
 
@@ -69,12 +61,20 @@ export default function Register() {
         }
     };
 
+    const passwordConditions = {
+        length: form.password.length >= 8,
+        lowercase: /[a-z]/.test(form.password),
+        uppercase: /[A-Z]/.test(form.password),
+        number: /\d/.test(form.password),
+        specialChar: /[@$!%*?#&.,';:"^()]/.test(form.password)
+    };
+
     const renderCondition = (condition, label) => (
         <div className="flex items-center text-sm gap-2 text-secondary-300">
             {condition ? (
                 <FaRegCheckCircle size={16} className="text-green-500" />
             ) : (
-                <FaRegCircle size={16} className="text-gray-400"/>
+                <FaRegCircle size={16} className="text-gray-400" />
             )}
             <span>{label}</span>
         </div>
@@ -98,9 +98,9 @@ export default function Register() {
                     </div>
 
                     <PasswordInput name="confirmPassword" value={form.confirmPassword} onChange={handleChange} />
-                    
+
                     <div className='mx-1 mb-2'>
-                    {renderCondition((form.password || form.confirmPassword) && form.password === form.confirmPassword, 'Passwords match')}
+                        {renderCondition((form.password || form.confirmPassword) && form.password === form.confirmPassword, 'Passwords match')}
                     </div>
 
                     <button
