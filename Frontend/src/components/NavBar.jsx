@@ -113,7 +113,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
             <h1
                 className="text-xl font-semibold text-primary-100 ml-2"
             >
-                Notes
+                My Notes
             </h1>
 
 
