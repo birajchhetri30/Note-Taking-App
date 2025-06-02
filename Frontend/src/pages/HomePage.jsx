@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import AddNoteModal from '../components/AddNoteModal';
 import NavBar from '../components/NavBar';
 import AddNoteButton from '../components/AddNoteButton';
+import PaginationButton from '../components/PaginationButton';
 
 Modal.setAppElement('#root');
 
@@ -18,11 +19,15 @@ export default function HomePage() {
 
     const [search, setSearch] = useState('');
     const [categoryId, setCategoryId] = useState([]);
-    const [sortBy, setSortBy] = useState('created_at');
+    const [sortBy, setSortBy] = useState('updated_at');
     const [sortOrder, setSortOrder] = useState('DESC');
     const [selectedCategories, setSelectedCategories] = useState([]);
 
     const [user, setUser] = useState(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const notesPerPage = 9;
 
     const navigate = useNavigate();
 
@@ -33,6 +38,8 @@ export default function HomePage() {
                 search,
                 sortBy,
                 order: sortOrder,
+                limit: notesPerPage,
+                offset: (currentPage - 1) * notesPerPage,
             };
 
             if (categoryId.length > 0) {
@@ -40,7 +47,8 @@ export default function HomePage() {
             }
 
             const res = await api.get('/notes', { params });
-            setNotes(res.data);
+            setNotes(res.data.notes || []);
+            setTotalPages(res.data.totalPages)
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to fetch notes');
             if (err.response?.status === 401) {
@@ -74,7 +82,7 @@ export default function HomePage() {
 
     useEffect(() => {
         fetchNotes();
-    }, [search, sortBy, sortOrder, categoryId]);
+    }, [search, sortBy, sortOrder, categoryId, currentPage]);
 
     // Because the background was still scrollable when model was open
     useEffect(() => {
@@ -101,6 +109,7 @@ export default function HomePage() {
     const handleFilterChange = (categoryIds) => {
         setCategoryId(categoryIds);
         setSelectedCategories(categoryIds);
+        // setCurrentPage(1);
     }
 
     const handleSortChange = (sortField) => {
@@ -134,6 +143,26 @@ export default function HomePage() {
 
             <NoteList notes={notes} refreshNotes={fetchNotes} />
 
+            <div className='flex justify-center items-center gap-5 mb-5'>
+                <PaginationButton
+                    direction='left'
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                />
+
+                <span
+                    className='text-md text-primary-200'
+                >
+                    {currentPage} of {totalPages}
+                </span>
+
+                <PaginationButton
+                    direction='right'
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                />
+            </div>
+
             <AddNoteButton setModalIsOpen={setModalIsOpen} />
 
             <Modal
@@ -148,8 +177,6 @@ export default function HomePage() {
                     onNoteCreated={handleNoteCreated}
                 />
             </Modal>
-
-
         </div>
     )
 }
