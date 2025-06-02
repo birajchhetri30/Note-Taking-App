@@ -223,6 +223,8 @@ cd Note-Taking-App</code></pre>
   <li>Frontend is built with React + Vite for fast dev builds and modular component structure.</li>
   <li>Axios interceptors are used in the frontend to automatically attach JWT tokens to all requests.</li>
     <li>LocalStorage is used to persist JWT tokens so that users stay logged in across page reloads.</li>
+    <li>Error handling in frontend API calls includes appropriate user feedback for failed requests.</li>
+    <li>Authentication token management is abstracted in <code>auth.js</code> to set, get, and remove JWT tokens from localStorage safely with error handling.</li>
 
 </ul>
 
