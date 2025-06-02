@@ -3,6 +3,7 @@ import api from "../services/api";
 import TextInput from "./TextInput";
 import { toast } from 'react-toastify';
 import CategorySelect from "./CategorySelect";
+import TipTapEditor from "./TipTapEditor";
 
 export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdated }) {
     const [form, setForm] = useState({ title: '', content: '', categories: [] });
@@ -130,11 +131,13 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                     style={{ width: '100%', marginBottom: '10px' }}
                 />
 
+                {/* <TipTapEditor /> */}
+
                 <label className="mx-1 my-2 text-secondary-400">Categories (optional)</label>
 
                 <CategorySelect
                     value={form.categories}
-                    options={form.categories}
+                    options={categoryOptions}
                     onChange={handleCategoryChange}
                     onCreateOption={(inputValue) => {
                         if (inputValue.length > 20) {
@@ -147,15 +150,14 @@ export default function AddNoteModal({ onClose, onNoteCreated, note, onNoteUpdat
                         setForm({ ...form, categories: updated });
                     }}
                 />
-                
+
+                {error && <p className="error_style">{error}</p>}
+
                 <div className="flex items-center justify-end">
                     <button className='button mt-3' type='submit' disabled={loading}>{note ? 'Update' : 'Create'}</button>
                     <button className='button mt-3 bg-transparent text-secondary-400' type='button' onClick={onClose} style={{ marginLeft: '10px' }}>Cancel</button>
                 </div>
             </form>
-
-            {error && <p className="self-center error_style">{error}</p>}
-
         </div>
     );
 }

@@ -50,7 +50,14 @@ export default function ViewNoteModal({ noteId, onClose, buttonText }) {
                 ))}
             </div>
 
-            <p className="text-secondary-400 whitespace-pre-wrap break-words">{note.content}</p>
+            <p className="text-secondary-400 whitespace-pre-wrap break-words">
+                {note.content}
+            </p>
+
+            {/* <div
+                className="prose prose-sm text-secondary-400 mt-2 line-clamp-4 prose-headings:text-secondary-400 prose-p:text-secondary-400"
+                dangerouslySetInnerHTML={{ __html: note.content }}
+            /> */}
 
             <div className="my-2 flex justify-between items-center">
                 <small
