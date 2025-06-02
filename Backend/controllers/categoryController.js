@@ -35,7 +35,7 @@ const deleteCategory = async (req, res) => {
         await deleteCategoryById(categoryId, userId);
         res.json({ message: 'Category deleted' });
     } catch (err) {
-        res.json(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
     }
 };
 
