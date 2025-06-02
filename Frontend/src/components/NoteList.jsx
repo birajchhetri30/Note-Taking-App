@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 export default function NoteList({ notes, refreshNotes }) {
     if (!Array.isArray(notes) || notes.length === 0) {
         return (
-            <div className='flex h-[90vh] w-full justify-center items-center'>
+            <div className='flex h-[80vh] w-full justify-center items-center'>
                 <p className='text-5xl text-primary-200'>No notes found</p>
             </div>
         )
@@ -70,7 +70,7 @@ export default function NoteList({ notes, refreshNotes }) {
     }, [modalOpen, viewingNoteId]);
 
     return (
-        <div className='p-6 m-1'>
+        <div className='p-6 m-1 min-h-[80vh]'>
             <div className='flex flex-wrap gap-x-10 gap-y-8 justify-center'>
                 {notes.map((note) => (
                     <div key={note.id} className='w-1/4 '>
