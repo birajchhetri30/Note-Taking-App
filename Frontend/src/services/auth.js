@@ -1,7 +1,7 @@
 export const setToken = (token) => {
     try {
         localStorage.setItem('token', token);
-    } catch (err) {
+    } catch (e) {
         console.error('Failed to save token', e);
     }
 };
