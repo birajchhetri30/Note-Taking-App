@@ -85,7 +85,7 @@ const getAll = async (req, res) => {
             })
         ]);
 
-        const totalPages = Math.ceil(totalCount / limit);
+        const totalPages = Math.max(Math.ceil(totalCount / limit), 1);
         res.json({
             notes,
             totalCount,
