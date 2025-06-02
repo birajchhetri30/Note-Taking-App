@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { MdDelete } from "react-icons/md";
-import { IoIosClose } from "react-icons/io";
-
 
 export default function CategoryModal({ isOpen, onClose }) {
     const [categories, setCategories] = useState([]);
