@@ -94,12 +94,41 @@ const getFilteredNotes = async (userId, {
     }
 
     sql += ` ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'}`;
-    // sql += ` GROUP BY n.id ORDER BY ${sortBy || 'created_at'} ${order || 'DESC'} LIMIT ? OFFSET ?`;
-    // params.push(parseInt(limit), parseInt(offset));
+    sql += ` LIMIT ? OFFSET ?`;
+    params.push(parseInt(limit), parseInt(offset));
 
     const [rows] = await db.query(sql, params);
     return rows;
 };
+
+const getFilteredNotesCount = async (userId, {
+    categoryId = [],
+    search
+}) => {
+    let sql = `
+    SELECT COUNT(DISTINCT n.id) as total
+    FROM notes n
+    LEFT JOIN notecategories nc 
+    ON n.id = nc.note_id
+    WHERE n.user_id = ?
+    `;
+
+    const params = [userId];
+
+    if (search) {
+        sql += ' AND (n.title LIKE ? OR n.content LIKE ?)';
+        params.push(`%${search}%`, `%${search}%`);
+    }
+
+    if (categoryId.length > 0) {
+        sql += ` AND nc.category_id IN (${categoryId.map(() => '?').join(',')})`;
+        params.push(...categoryId);
+    }
+
+    const [rows] = await db.query(sql, params);
+    return rows[0].total;
+}
+
 
 module.exports = {
     createNote,
@@ -111,4 +140,5 @@ module.exports = {
     createCategory,
     linkNoteCategory,
     getFilteredNotes,
+    getFilteredNotesCount
 };

@@ -7,9 +7,8 @@ const {
     findCategoryByName,
     createCategory,
     linkNoteCategory,
-    addCategoryToNote,
-    removeCategoryFromNote,
     getFilteredNotes,
+    getFilteredNotesCount,
 } = require('../models/noteModel');
 
 
@@ -17,7 +16,7 @@ const create = async (req, res) => {
     const userId = req.user.id;
     const { title, content, categoryIds = [] } = req.body;
     if (!title) return res.status(400).json({ message: 'Title is required' });
-    
+
     console.log(categoryIds);
     const connection = await require('../db').getConnection();
     await connection.beginTransaction();
@@ -55,12 +54,15 @@ const getAll = async (req, res) => {
     const userId = req.user.id;
     let {
         categoryId,
-        limit = 10,
+        limit = 9,
         offset = 0,
         sortBy,
         order,
         search
     } = req.query;
+
+    limit = parseInt(limit);
+    offset = parseInt(offset);
 
     if (typeof categoryId === 'string') {
         categoryId = categoryId.split(',').map(id => parseInt(id)).filter(Boolean);
@@ -69,15 +71,27 @@ const getAll = async (req, res) => {
     }
 
     try {
-        const notes = await getFilteredNotes(userId, {
-            categoryId,
-            limit,
-            offset,
-            sortBy,
-            order,
-            search
+        const [notes, totalCount] = await Promise.all([
+            getFilteredNotes(userId, {
+                categoryId,
+                limit,
+                offset,
+                sortBy,
+                order,
+                search
+            }),
+            getFilteredNotesCount(userId, {
+                categoryId, search
+            })
+        ]);
+
+        const totalPages = Math.ceil(totalCount / limit);
+        res.json({
+            notes,
+            totalCount,
+            totalPages,
+            currentPage: Math.floor(offset / limit) + 1,
         });
-        res.json(notes);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -110,7 +124,7 @@ const update = async (req, res) => {
     try {
         const updateRows = await updateNote(connection, noteId, userId, title, content);
         if (updateRows === 0) return res.status(404).json({ message: 'Note not found or no permission' });
-        
+
         await connection.execute(
             'DELETE FROM notecategories WHERE note_id = ?',
             [noteId]
@@ -145,10 +159,10 @@ const remove = async (req, res) => {
 
     try {
         const deleteRows = await deleteNote(noteId, userId);
-        if (deleteRows === 0) return res.status(404).json({message: 'Note not found or no permission'});
-        res.json({message: 'Note deleted'});
+        if (deleteRows === 0) return res.status(404).json({ message: 'Note not found or no permission' });
+        res.json({ message: 'Note deleted' });
     } catch (err) {
-        res.status(500).json({error: err.message});
+        res.status(500).json({ error: err.message });
     }
 };
 
