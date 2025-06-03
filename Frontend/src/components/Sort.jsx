@@ -1,8 +1,8 @@
 import { TbArrowsSort } from "react-icons/tb";
 
-export default function Sort({ sortDropdownOpen, setSortDropdownOpen, handleSortSelect, sortBy, sortOrder, ref }) {
+export default function Sort({ sortDropdownOpen, setSortDropdownOpen, handleSortSelect, sortBy, sortOrder, dropdownRef }) {
     return (
-        <div ref={ref} className="relative inline-block">
+        <div ref={dropdownRef} className="relative inline-block">
             <div
                 className="rounded-full bg-primary-300 border-2 border-secondary-300 p-2 cursor-pointer hover:brightness-120"
                 onClick={() => setSortDropdownOpen(!sortDropdownOpen)}

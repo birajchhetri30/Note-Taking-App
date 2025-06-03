@@ -134,7 +134,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                     setSelectedCategories={setSelectedCategories}
                     handleFilterSelect={handleFilterSelect}
                     onFilterChange={onFilterChange}
-                    ref={filterRef}
+                    dropdownRef={filterRef}
                 />
 
                 <Sort
@@ -143,7 +143,7 @@ export default function NavBar({ search, onSearch, onFilterChange, onSortChange,
                     handleSortSelect={handleSortSelect}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
-                    ref={sortRef}
+                    dropdownRef={sortRef}
                 />
 
 
