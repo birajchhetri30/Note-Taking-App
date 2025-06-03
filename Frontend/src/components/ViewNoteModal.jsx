@@ -11,7 +11,7 @@ export default function ViewNoteModal({ noteId, onClose, buttonText }) {
                 const res = await api.get(`/notes/${noteId}`);
                 setNote(res.data);
             } catch (err) {
-                console.error("Failed to fetch note", error);
+                console.error("Failed to fetch note", err);
             }
         };
 
