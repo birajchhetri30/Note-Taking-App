@@ -27,7 +27,7 @@ export default function Note({ note, onEdit, onDelete, onView }) {
         >
             <div>
                 <h3
-                    className="text-2xl text-secondary-400 line-clamp-2"
+                    className="text-2xl text-secondary-400 line-clamp-2 break-words"
                 >
                     {note.title}
                 </h3>
