@@ -1,4 +1,4 @@
-export default function TextInput({name, value, onChange, maxLength=null}) {
+export default function TextInput({name, value, onChange, maxLength}) {
     const placeholder = name.charAt(0).toUpperCase() + name.slice(1);
     
     return (
@@ -9,7 +9,7 @@ export default function TextInput({name, value, onChange, maxLength=null}) {
                 value={value}
                 onChange={onChange} 
                 placeholder={placeholder}
-                maxLength={100}
+                maxLength={maxLength || 100}
             />
         </div>
     )
