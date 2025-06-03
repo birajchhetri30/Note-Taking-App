@@ -80,6 +80,8 @@ export default function Register() {
         </div>
     )
 
+    const passwordsMatch = (form.password || form.confirmPassword) && form.password === form.confirmPassword;
+
     return (
         <div className='login_card'>
             <div className='bg-primary-200 h-[90vh] sm:w-1/2 md:1/2 lg:w-1/3 xl:w-1/4 p-6 rounded-3xl shadow-2xl flex flex-col items-center'>
@@ -100,7 +102,7 @@ export default function Register() {
                     <PasswordInput name="confirmPassword" value={form.confirmPassword} onChange={handleChange} />
 
                     <div className='mx-1 mb-2'>
-                        {renderCondition((form.password || form.confirmPassword) && form.password === form.confirmPassword, 'Passwords match')}
+                        {renderCondition(passwordsMatch, 'Passwords match')}
                     </div>
 
                     <button
